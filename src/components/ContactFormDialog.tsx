@@ -185,7 +185,7 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
               type="submit"
               disabled={loading || isDuplicate}
               className="flex-1 h-12 rounded-xl text-base"
-              style={{ backgroundColor: "hsl(174, 60%, 51%)" }}
+              style={{ backgroundColor: "hsl(207, 70%, 55%)" }}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <UserPlus className="mr-2 h-4 w-4" />
