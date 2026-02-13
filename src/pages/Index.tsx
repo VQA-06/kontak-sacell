@@ -75,15 +75,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-lg border-b border-border">
-        <div className="mx-auto max-w-2xl px-4 py-3 flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
-            <BookUser className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <h1 className="text-lg font-bold text-foreground">Kontak Saya</h1>
-        </div>
-      </header>
-
       <main className="mx-auto max-w-2xl px-4 py-4 pb-24">
         <div className="relative mb-4">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
