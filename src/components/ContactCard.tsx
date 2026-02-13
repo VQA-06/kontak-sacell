@@ -35,12 +35,7 @@ interface ContactCardProps {
 const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
   const [copied, setCopied] = useState(false);
 
-  const initials = contact.name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const initials = contact.name.charAt(0).toUpperCase();
 
   const handleDoubleClick = () => {
     if (!contact.phone) return;
