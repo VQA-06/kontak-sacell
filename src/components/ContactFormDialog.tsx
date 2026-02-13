@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import danaLogo from "@/assets/ewallet-dana.png";
+import danaLogo from "@/assets/ewallet-dana.webp";
 
 const EWALLET_OPTIONS = [
   { id: "dana", label: "DANA", color: "#108ee9", logo: danaLogo },
