@@ -155,10 +155,10 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
                     style={active ? { backgroundColor: ew.color } : {}}
                   >
                     {'logo' in ew && ew.logo ? (
-                      <img src={ew.logo} alt={ew.label} className="h-5 w-5 object-contain" />
+                      <img src={ew.logo} alt={ew.label} className="h-4 w-4 object-contain" />
                     ) : (
                       <span
-                        className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                        className="flex h-4 w-4 items-center justify-center rounded-full text-[7px] font-bold text-white"
                         style={{ backgroundColor: ew.color }}
                       >
                         {ew.label[0]}
