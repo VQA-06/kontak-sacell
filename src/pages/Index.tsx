@@ -101,10 +101,6 @@ const Index = () => {
             ))}
           </div>
         )}
-
-        {filtered.length > 0 && (
-          <p className="text-xs text-muted-foreground text-center mt-6">💡 Klik dua kali pada kontak untuk menyalin</p>
-        )}
       </main>
 
       <button
