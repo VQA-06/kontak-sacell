@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import ContactCard from "@/components/ContactCard";
 import ContactFormDialog from "@/components/ContactFormDialog";
+import AdminPanel from "@/components/AdminPanel";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Plus, Search, BookUser, Users } from "lucide-react";
+import { Plus, Search, BookUser, Users, Shield } from "lucide-react";
 
 interface Contact {
   id: string;
@@ -18,6 +19,9 @@ const Index = () => {
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editContact, setEditContact] = useState<Contact | null>(null);
+  const [adminOpen, setAdminOpen] = useState(false);
+
+  const showAdminButton = search.toLowerCase() === "edit";
 
   useEffect(() => {
     fetchContacts();
@@ -87,12 +91,27 @@ const Index = () => {
           <Input placeholder="Cari kontak..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 bg-card" />
         </div>
 
-        <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
-          <Users className="h-4 w-4" />
-          <span>{filtered.length} kontak</span>
-        </div>
+        {showAdminButton ? (
+          <div className="flex justify-center mb-4">
+            <button
+              onClick={() => {
+                setAdminOpen(true);
+                setSearch("");
+              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted text-muted-foreground hover:bg-accent transition-colors text-sm font-medium"
+            >
+              <Shield className="h-4 w-4" />
+              Buka Admin Panel
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
+            <Users className="h-4 w-4" />
+            <span>{filtered.length} kontak</span>
+          </div>
+        )}
 
-        {filtered.length === 0 ? (
+        {!showAdminButton && filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-4">
               <BookUser className="h-8 w-8 text-muted-foreground" />
@@ -100,13 +119,13 @@ const Index = () => {
             <p className="text-muted-foreground font-medium">{search ? "Kontak tidak ditemukan" : "Belum ada kontak"}</p>
             <p className="text-sm text-muted-foreground mt-1">{search ? "Coba kata kunci lain" : "Tap + untuk menambahkan kontak baru"}</p>
           </div>
-        ) : (
+        ) : !showAdminButton ? (
           <div className="space-y-3">
             {filtered.map((contact) => (
               <ContactCard key={contact.id} contact={contact} onEdit={handleEdit} onDelete={handleDelete} />
             ))}
           </div>
-        )}
+        ) : null}
       </main>
 
       <button
@@ -119,6 +138,7 @@ const Index = () => {
       </button>
 
       <ContactFormDialog open={dialogOpen} onOpenChange={setDialogOpen} contact={editContact} onSave={handleSave} />
+      <AdminPanel open={adminOpen} onOpenChange={setAdminOpen} contacts={contacts} onRefresh={fetchContacts} />
     </div>
   );
 };
