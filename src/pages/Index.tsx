@@ -5,7 +5,7 @@ import ContactFormDialog from "@/components/ContactFormDialog";
 import AdminPanel from "@/components/AdminPanel";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Plus, Search, BookUser, Users, Shield } from "lucide-react";
+import { Plus, Search, BookUser, Users, SlidersHorizontal } from "lucide-react";
 
 interface Contact {
   id: string;
@@ -92,16 +92,17 @@ const Index = () => {
         </div>
 
         {showAdminButton ? (
-          <div className="flex justify-center mb-4">
+          <div className="mb-4">
             <button
               onClick={() => {
                 setAdminOpen(true);
                 setSearch("");
               }}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted text-muted-foreground hover:bg-accent transition-colors text-sm font-medium"
+              className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-white font-semibold text-base shadow-lg transition-all hover:opacity-90 active:scale-[0.98]"
+              style={{ background: "linear-gradient(135deg, hsl(174, 60%, 45%), hsl(174, 60%, 55%))" }}
             >
-              <Shield className="h-4 w-4" />
-              Buka Admin Panel
+              <SlidersHorizontal className="h-5 w-5" />
+              Buka Menu Admin
             </button>
           </div>
         ) : (
