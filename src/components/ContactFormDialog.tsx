@@ -10,9 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import danaLogo from "@/assets/ewallet-dana.png";
 
 const EWALLET_OPTIONS = [
-  { id: "dana", label: "DANA", color: "#108ee9" },
+  { id: "dana", label: "DANA", color: "#108ee9", logo: danaLogo },
   { id: "gopay", label: "GoPay", color: "#00aa13" },
   { id: "ovo", label: "OVO", color: "#4c3494" },
   { id: "shopeepay", label: "ShopeePay", color: "#ee4d2d" },
@@ -151,12 +152,16 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
                     }`}
                     style={active ? { backgroundColor: ew.color } : {}}
                   >
-                    <span
-                      className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                      style={{ backgroundColor: ew.color }}
-                    >
-                      {ew.label[0]}
-                    </span>
+                    {'logo' in ew && ew.logo ? (
+                      <img src={ew.logo} alt={ew.label} className="h-5 w-5 object-contain" />
+                    ) : (
+                      <span
+                        className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                        style={{ backgroundColor: ew.color }}
+                      >
+                        {ew.label[0]}
+                      </span>
+                    )}
                     {ew.label}
                   </button>
                 );

@@ -7,9 +7,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import danaLogo from "@/assets/ewallet-dana.png";
 
-const EWALLET_META: Record<string, { label: string; color: string }> = {
-  dana: { label: "DANA", color: "#108ee9" },
+const EWALLET_META: Record<string, { label: string; color: string; logo?: string }> = {
+  dana: { label: "DANA", color: "#108ee9", logo: danaLogo },
   gopay: { label: "GoPay", color: "#00aa13" },
   ovo: { label: "OVO", color: "#4c3494" },
   shopeepay: { label: "ShopeePay", color: "#ee4d2d" },
@@ -77,7 +78,15 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
             {contact.ewallet.map((ew) => {
               const meta = EWALLET_META[ew];
               if (!meta) return null;
-              return (
+              return meta.logo ? (
+                <img
+                  key={ew}
+                  src={meta.logo}
+                  alt={meta.label}
+                  className="h-6 w-6 object-contain"
+                  title={meta.label}
+                />
+              ) : (
                 <span
                   key={ew}
                   className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold text-white"
