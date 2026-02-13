@@ -85,13 +85,13 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
                   key={ew}
                   src={meta.logo}
                   alt={meta.label}
-                  className="h-6 w-6 object-contain"
+                  className="h-5 w-5 object-contain"
                   title={meta.label}
                 />
               ) : (
                 <span
                   key={ew}
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold text-white"
+                  className="flex h-5 w-5 items-center justify-center rounded-full text-[8px] font-bold text-white"
                   style={{ backgroundColor: meta.color }}
                   title={meta.label}
                 >
