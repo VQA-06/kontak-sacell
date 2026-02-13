@@ -13,50 +13,41 @@ Deno.serve(async (req) => {
 
   try {
     const { sourceUrl, sourceKey } = await req.json();
-
-    // Connect to source database
     const sourceSupabase = createClient(sourceUrl, sourceKey);
 
-    // Fetch all contacts from source
+    // Fetch only contacts with ewallets data
     const { data: sourceContacts, error: fetchError } = await sourceSupabase
       .from("contacts")
-      .select("*")
+      .select("phone, ewallets")
+      .not("ewallets", "eq", "{}") 
+      .not("phone", "is", null)
       .order("name");
 
     if (fetchError) throw new Error(`Gagal membaca sumber: ${fetchError.message}`);
-    if (!sourceContacts || sourceContacts.length === 0) {
-      return new Response(
-        JSON.stringify({ success: true, message: "Tidak ada kontak ditemukan", count: 0 }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
 
-    // Connect to destination (our) database
     const destSupabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Map contacts - adapt fields
-    const mapped = sourceContacts.map((c: any) => ({
-      name: c.name || "Tanpa Nama",
-      phone: c.phone || null,
-      ewallet: Array.isArray(c.ewallet) ? c.ewallet : [],
-    }));
+    // Batch update using Promise.all with concurrency limit
+    const contacts = (sourceContacts || []).filter(
+      (c: any) => Array.isArray(c.ewallets) && c.ewallets.length > 0 && c.phone
+    );
 
-    // Insert in batches of 100
-    let inserted = 0;
-    for (let i = 0; i < mapped.length; i += 100) {
-      const batch = mapped.slice(i, i + 100);
-      const { error: insertError } = await destSupabase
-        .from("contacts")
-        .insert(batch);
-      if (insertError) throw new Error(`Gagal insert batch: ${insertError.message}`);
-      inserted += batch.length;
-    }
+    const results = await Promise.all(
+      contacts.map((c: any) =>
+        destSupabase
+          .from("contacts")
+          .update({ ewallet: c.ewallets })
+          .eq("phone", c.phone)
+      )
+    );
+
+    const updated = results.filter((r) => !r.error).length;
 
     return new Response(
-      JSON.stringify({ success: true, count: inserted, message: `${inserted} kontak berhasil diimport!` }),
+      JSON.stringify({ success: true, updated, total: contacts.length, message: `${updated} kontak diupdate dengan data e-wallet!` }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
