@@ -294,12 +294,12 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
       <Drawer open={backupOpen} onOpenChange={setBackupOpen}>
         <DrawerContent className="max-h-[85vh]">
           <div className="mx-auto w-full max-w-md px-4 pb-6">
-            <DrawerHeader className="relative px-0">
-              <DrawerTitle className="text-xl font-bold">Backup Manager</DrawerTitle>
-              <DrawerClose className="absolute right-0 top-0 rounded-sm opacity-70 hover:opacity-100 transition-opacity">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold text-muted-foreground">Backup Manager</p>
+              <DrawerClose className="rounded-sm opacity-70 hover:opacity-100 transition-opacity">
                 <X className="h-5 w-5" />
               </DrawerClose>
-            </DrawerHeader>
+            </div>
 
             <div className="space-y-4">
               <Button
@@ -342,6 +342,10 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
                           </p>
                           <p className="text-xs text-muted-foreground">
                             {getRelativeTime(b.created_at)}
+                            {(() => {
+                              const match = b.name.match(/(\d+)kontak/);
+                              return match ? `  •  ${match[1]} kontak` : "";
+                            })()}
                           </p>
                         </div>
                       </button>
