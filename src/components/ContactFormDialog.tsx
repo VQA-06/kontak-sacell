@@ -15,9 +15,6 @@ interface Contact {
   id: string;
   name: string;
   phone: string | null;
-  email: string | null;
-  company: string | null;
-  notes: string | null;
 }
 
 interface ContactFormDialogProps {
@@ -30,24 +27,15 @@ interface ContactFormDialogProps {
 const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormDialogProps) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
-  const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (contact) {
       setName(contact.name);
       setPhone(contact.phone || "");
-      setEmail(contact.email || "");
-      setCompany(contact.company || "");
-      setNotes(contact.notes || "");
     } else {
       setName("");
       setPhone("");
-      setEmail("");
-      setCompany("");
-      setNotes("");
     }
   }, [contact, open]);
 
@@ -58,9 +46,6 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
       await onSave({
         name,
         phone: phone || null,
-        email: email || null,
-        company: company || null,
-        notes: notes || null,
       });
       onOpenChange(false);
     } finally {
@@ -82,18 +67,6 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
           <div className="space-y-2">
             <Label htmlFor="phone">Telepon</Label>
             <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08xx xxxx xxxx" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@contoh.com" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="company">Perusahaan</Label>
-            <Input id="company" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Nama perusahaan" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="notes">Catatan</Label>
-            <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Catatan tambahan..." rows={3} />
           </div>
           <div className="flex gap-3 justify-end pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

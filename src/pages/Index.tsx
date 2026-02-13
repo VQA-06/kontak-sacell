@@ -10,9 +10,6 @@ interface Contact {
   id: string;
   name: string;
   phone: string | null;
-  email: string | null;
-  company: string | null;
-  notes: string | null;
 }
 
 const Index = () => {
@@ -28,7 +25,7 @@ const Index = () => {
   const fetchContacts = async () => {
     const { data, error } = await supabase
       .from("contacts")
-      .select("id, name, phone, email, company, notes")
+      .select("id, name, phone")
       .order("name");
     if (error) {
       toast.error("Gagal memuat kontak");
@@ -69,7 +66,7 @@ const Index = () => {
   };
 
   const filtered = contacts.filter((c) =>
-    [c.name, c.phone, c.email, c.company]
+    [c.name, c.phone]
       .filter(Boolean)
       .join(" ")
       .toLowerCase()
