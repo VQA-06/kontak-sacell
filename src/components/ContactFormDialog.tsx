@@ -11,12 +11,13 @@ import { Label } from "@/components/ui/label";
 import { Loader2, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import danaLogo from "@/assets/ewallet-dana.webp";
+import shopeepayLogo from "@/assets/ewallet-shopeepay.webp";
 
 const EWALLET_OPTIONS = [
   { id: "dana", label: "DANA", color: "#108ee9", logo: danaLogo },
   { id: "gopay", label: "GoPay", color: "#00aa13" },
   { id: "ovo", label: "OVO", color: "#4c3494" },
-  { id: "shopeepay", label: "ShopeePay", color: "#ee4d2d" },
+  { id: "shopeepay", label: "ShopeePay", color: "#ee4d2d", logo: shopeepayLogo },
 ] as const;
 
 interface Contact {
