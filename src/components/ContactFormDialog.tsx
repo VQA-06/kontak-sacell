@@ -39,13 +39,19 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
     }
   }, [contact, open]);
 
+  const cleanPhone = (value: string) => value.replace(/[\s\-\.\(\)\+]/g, "");
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(cleanPhone(e.target.value));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       await onSave({
         name,
-        phone: phone || null,
+        phone: cleanPhone(phone) || null,
       });
       onOpenChange(false);
     } finally {
@@ -66,7 +72,7 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone">Telepon</Label>
-            <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08xx xxxx xxxx" />
+            <Input id="phone" type="tel" value={phone} onChange={handlePhoneChange} placeholder="08xxxxxxxxxx" />
           </div>
           <div className="flex gap-3 justify-end pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
