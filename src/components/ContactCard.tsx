@@ -68,7 +68,7 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
           {contact.name}
         </h3>
         {contact.phone && (
-          <span className="block text-sm text-muted-foreground font-medium mt-0.5 tracking-wide">
+          <span className="block text-[15px] text-foreground/60 font-medium mt-0.5 tracking-wide">
             {formatPhone(contact.phone)}
           </span>
         )}
