@@ -31,8 +31,8 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
     .toUpperCase();
 
   const handleDoubleClick = () => {
-    const info = [contact.name, contact.phone].filter(Boolean).join("\n");
-    navigator.clipboard.writeText(info);
+    if (!contact.phone) return;
+    navigator.clipboard.writeText(contact.phone);
     setCopied(true);
     toast.success("Kontak disalin!");
     setTimeout(() => setCopied(false), 2000);
