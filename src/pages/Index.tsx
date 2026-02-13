@@ -75,13 +75,15 @@ const Index = () => {
     setDialogOpen(true);
   };
 
-  const filtered = contacts.filter((c) =>
-    [c.name, c.phone]
+  const filtered = contacts.filter((c) => {
+    if (!search || search.toLowerCase() === "edit") return true;
+    const contactText = [c.name, c.phone, ...(c.ewallet || [])]
       .filter(Boolean)
       .join(" ")
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+      .toLowerCase();
+    const keywords = search.toLowerCase().split(/[\s,\/]+/).filter(Boolean);
+    return keywords.every((kw) => contactText.includes(kw));
+  });
 
   return (
     <div className="min-h-screen bg-background">
