@@ -5,7 +5,7 @@ import ContactFormDialog from "@/components/ContactFormDialog";
 import AdminPanel from "@/components/AdminPanel";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Plus, Search, BookUser, Users, SlidersHorizontal } from "lucide-react";
+import { Plus, Search, BookUser, Users, SlidersHorizontal, X } from "lucide-react";
 
 interface Contact {
   id: string;
@@ -90,7 +90,12 @@ const Index = () => {
       <main className="mx-auto max-w-2xl px-4 py-4 pb-24">
         <div className="relative mb-4">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Cari kontak..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 bg-card" />
+          <Input placeholder="Cari kontak..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 pr-9 bg-card" />
+          {search && (
+            <button onClick={() => setSearch("")} className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors">
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         {showAdminButton ? (
