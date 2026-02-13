@@ -58,9 +58,6 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
       onDoubleClick={handleDoubleClick}
       className="group flex items-center gap-3 rounded-2xl bg-card p-4 cursor-pointer select-none transition-all duration-200 hover:shadow-md border border-border/40"
     >
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground font-bold text-base">
-        {initials}
-      </div>
 
       <div className="flex-1 min-w-0">
         <h3 className="text-base text-foreground truncate" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
