@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import danaLogo from "@/assets/ewallet-dana.webp";
-import shopeepayLogo from "@/assets/ewallet-shopeepay.webp";
+import shopeepayLogo from "@/assets/ewallet-shopeepay.png";
 import gopayLogo from "@/assets/ewallet-gopay.webp";
 
 const EWALLET_META: Record<string, { label: string; color: string; logo?: string }> = {

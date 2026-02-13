@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import danaLogo from "@/assets/ewallet-dana.webp";
-import shopeepayLogo from "@/assets/ewallet-shopeepay.webp";
+import shopeepayLogo from "@/assets/ewallet-shopeepay.png";
 import gopayLogo from "@/assets/ewallet-gopay.webp";
 
 const EWALLET_OPTIONS = [
