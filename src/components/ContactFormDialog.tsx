@@ -13,11 +13,12 @@ import { supabase } from "@/integrations/supabase/client";
 import danaLogo from "@/assets/ewallet-dana.webp";
 import shopeepayLogo from "@/assets/ewallet-shopeepay.png";
 import gopayLogo from "@/assets/ewallet-gopay.webp";
+import ovoLogo from "@/assets/ewallet-ovo.webp";
 
 const EWALLET_OPTIONS = [
   { id: "dana", label: "DANA", color: "#108ee9", logo: danaLogo },
   { id: "gopay", label: "GoPay", color: "#00aa13", logo: gopayLogo },
-  { id: "ovo", label: "OVO", color: "#4c3494" },
+  { id: "ovo", label: "OVO", color: "#4c3494", logo: ovoLogo },
   { id: "shopeepay", label: "ShopeePay", color: "#ee4d2d", logo: shopeepayLogo },
 ] as const;
 
