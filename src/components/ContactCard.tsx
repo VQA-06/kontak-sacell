@@ -70,18 +70,14 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => handleDoubleClick()}>
-            <Copy className="mr-2 h-4 w-4" />
-            Salin Kontak
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onEdit(contact)}>
-            Edit Kontak
+            Edit
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => onDelete(contact.id)}
             className="text-destructive focus:text-destructive"
           >
-            Hapus Kontak
+            Hapus
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
