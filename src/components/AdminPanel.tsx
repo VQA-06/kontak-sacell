@@ -246,152 +246,112 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
   );
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Menu Admin</DialogTitle>
-            <p className="text-sm text-muted-foreground">
-              Kelola kontak dengan fitur ekspor dan impor
-            </p>
-          </DialogHeader>
-
-          <div className="space-y-5">
-            {/* EKSPOR */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Ekspor
-              </p>
-              <div className="space-y-2">
-                <MenuRow
-                  icon={FileJson}
-                  iconBg="hsl(174, 60%, 51%)"
-                  title="Ekspor ke JSON"
-                  subtitle={`Simpan ${contacts.length} kontak ke file JSON`}
-                  onClick={exportJSON}
-                />
-                <MenuRow
-                  icon={Download}
-                  iconBg="hsl(174, 60%, 51%)"
-                  title="Ekspor ke vCard"
-                  subtitle={`Simpan ${contacts.length} kontak ke file .vcf`}
-                  onClick={exportVCard}
-                />
+    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) setBackupOpen(false); }}>
+      <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
+        {backupOpen ? (
+          <>
+            <DialogHeader>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setBackupOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors text-sm">
+                  ← Kembali
+                </button>
               </div>
-            </div>
+              <DialogTitle className="text-xl font-bold">Backup Manager</DialogTitle>
+            </DialogHeader>
 
-            {/* BACKUP */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Backup
-              </p>
-              <MenuRow
-                icon={HardDrive}
-                iconBg="#64748b"
-                title="Auto-Backup"
-                onClick={() => setBackupOpen(true)}
-              />
-            </div>
+            <div className="space-y-4">
+              <Button
+                onClick={handleBackupNow}
+                disabled={loading === "backup"}
+                className="w-full h-12 rounded-xl text-base font-semibold"
+                style={{ backgroundColor: "hsl(174, 60%, 51%)" }}
+              >
+                {loading === "backup" ? (
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                  <CloudUpload className="mr-2 h-5 w-5" />
+                )}
+                Backup Sekarang
+              </Button>
 
-            {/* IMPOR */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Impor
-              </p>
-              <div className="space-y-2">
-                <MenuRow
-                  icon={Upload}
-                  iconBg="hsl(174, 60%, 51%)"
-                  title="Impor dari JSON"
-                  subtitle="Tambahkan kontak dari file JSON"
-                  onClick={() => handleImportClick("json")}
-                />
-                <MenuRow
-                  icon={Download}
-                  iconBg="hsl(174, 60%, 51%)"
-                  title="Impor dari vCard"
-                  subtitle="Tambahkan kontak dari file .vcf"
-                  onClick={() => handleImportClick("vcf")}
-                />
-              </div>
-            </div>
-          </div>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json,.vcf"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </DialogContent>
-      </Dialog>
-
-      {/* Backup Manager Sub-Dialog */}
-      <Dialog open={backupOpen} onOpenChange={setBackupOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Backup Manager</DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <Button
-              onClick={handleBackupNow}
-              disabled={loading === "backup"}
-              className="w-full h-12 rounded-xl text-base font-semibold"
-              style={{ backgroundColor: "hsl(174, 60%, 51%)" }}
-            >
-              {loading === "backup" ? (
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              {loadingBackups ? (
+                <div className="flex justify-center py-6">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : backups.length === 0 ? (
+                <p className="text-center text-sm text-muted-foreground py-6">
+                  Belum ada backup
+                </p>
               ) : (
-                <CloudUpload className="mr-2 h-5 w-5" />
+                <div className="space-y-2">
+                  {backups.map((b) => (
+                    <div
+                      key={b.name}
+                      className="flex items-center gap-2 rounded-xl border border-border/50 p-3"
+                    >
+                      <button
+                        onClick={() => handleDownloadBackup(b.name)}
+                        className="flex items-center gap-2 flex-1 min-w-0 text-left"
+                      >
+                        <Download className="h-4 w-4 shrink-0" style={{ color: "hsl(174, 60%, 51%)" }} />
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium text-foreground break-all">
+                            {b.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {getRelativeTime(b.created_at)}
+                          </p>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBackup(b.name)}
+                        className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors shrink-0"
+                      >
+                        <Trash2 className="h-4 w-4 text-muted-foreground" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
-              Backup Sekarang
-            </Button>
-
-            {loadingBackups ? (
-              <div className="flex justify-center py-6">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-              </div>
-            ) : backups.length === 0 ? (
-              <p className="text-center text-sm text-muted-foreground py-6">
-                Belum ada backup
+            </div>
+          </>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold">Menu Admin</DialogTitle>
+              <p className="text-sm text-muted-foreground">
+                Kelola kontak dengan fitur ekspor dan impor
               </p>
-            ) : (
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {backups.map((b) => (
-                  <div
-                    key={b.name}
-                    className="flex items-center gap-3 rounded-xl border border-border/50 p-3"
-                  >
-                    <button
-                      onClick={() => handleDownloadBackup(b.name)}
-                      className="flex items-center gap-3 flex-1 min-w-0 text-left"
-                    >
-                      <Download className="h-5 w-5 shrink-0" style={{ color: "hsl(174, 60%, 51%)" }} />
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {b.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {getRelativeTime(b.created_at)}
-                        </p>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleDeleteBackup(b.name)}
-                      className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors shrink-0"
-                    >
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </button>
-                  </div>
-                ))}
+            </DialogHeader>
+
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ekspor</p>
+                <div className="space-y-2">
+                  <MenuRow icon={FileJson} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke JSON" subtitle={`Simpan ${contacts.length} kontak ke file JSON`} onClick={exportJSON} />
+                  <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke vCard" subtitle={`Simpan ${contacts.length} kontak ke file .vcf`} onClick={exportVCard} />
+                </div>
               </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Backup</p>
+                <MenuRow icon={HardDrive} iconBg="#64748b" title="Auto-Backup" onClick={() => setBackupOpen(true)} />
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Impor</p>
+                <div className="space-y-2">
+                  <MenuRow icon={Upload} iconBg="hsl(174, 60%, 51%)" title="Impor dari JSON" subtitle="Tambahkan kontak dari file JSON" onClick={() => handleImportClick("json")} />
+                  <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Impor dari vCard" subtitle="Tambahkan kontak dari file .vcf" onClick={() => handleImportClick("vcf")} />
+                </div>
+              </div>
+            </div>
+
+            <input ref={fileInputRef} type="file" accept=".json,.vcf" onChange={handleFileChange} className="hidden" />
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 
