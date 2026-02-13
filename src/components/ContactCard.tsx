@@ -10,11 +10,12 @@ import { toast } from "sonner";
 import danaLogo from "@/assets/ewallet-dana.webp";
 import shopeepayLogo from "@/assets/ewallet-shopeepay.png";
 import gopayLogo from "@/assets/ewallet-gopay.webp";
+import ovoLogo from "@/assets/ewallet-ovo.webp";
 
 const EWALLET_META: Record<string, { label: string; color: string; logo?: string }> = {
   dana: { label: "DANA", color: "#108ee9", logo: danaLogo },
   gopay: { label: "GoPay", color: "#00aa13", logo: gopayLogo },
-  ovo: { label: "OVO", color: "#4c3494" },
+  ovo: { label: "OVO", color: "#4c3494", logo: ovoLogo },
   shopeepay: { label: "ShopeePay", color: "#ee4d2d", logo: shopeepayLogo },
 };
 
