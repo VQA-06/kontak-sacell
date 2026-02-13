@@ -99,7 +99,7 @@ const Index = () => {
                 setSearch("");
               }}
               className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-white font-semibold text-base shadow-lg transition-all hover:opacity-90 active:scale-[0.98]"
-              style={{ background: "linear-gradient(135deg, hsl(174, 60%, 45%), hsl(174, 60%, 55%))" }}
+              style={{ background: "linear-gradient(135deg, hsl(207, 70%, 50%), hsl(207, 70%, 60%))" }}
             >
               <SlidersHorizontal className="h-5 w-5" />
               Buka Menu Admin
@@ -132,7 +132,7 @@ const Index = () => {
       <button
         onClick={handleAdd}
         className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 text-white"
-        style={{ backgroundColor: "hsl(174, 60%, 51%)" }}
+        style={{ backgroundColor: "hsl(207, 70%, 55%)" }}
         aria-label="Tambah kontak"
       >
         <Plus className="h-6 w-6" />

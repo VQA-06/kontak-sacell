@@ -268,8 +268,8 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
             <div className="space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ekspor</p>
               <div className="space-y-2">
-                <MenuRow icon={FileJson} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke JSON" subtitle={`Simpan ${contacts.length} kontak ke file JSON`} onClick={exportJSON} />
-                <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke vCard" subtitle={`Simpan ${contacts.length} kontak ke file .vcf`} onClick={exportVCard} />
+                <MenuRow icon={FileJson} iconBg="hsl(207, 70%, 55%)" title="Ekspor ke JSON" subtitle={`Simpan ${contacts.length} kontak ke file JSON`} onClick={exportJSON} />
+                <MenuRow icon={Download} iconBg="hsl(207, 70%, 55%)" title="Ekspor ke vCard" subtitle={`Simpan ${contacts.length} kontak ke file .vcf`} onClick={exportVCard} />
               </div>
             </div>
 
@@ -281,8 +281,8 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
             <div className="space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Impor</p>
               <div className="space-y-2">
-                <MenuRow icon={Upload} iconBg="hsl(174, 60%, 51%)" title="Impor dari JSON" subtitle="Tambahkan kontak dari file JSON" onClick={() => handleImportClick("json")} />
-                <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Impor dari vCard" subtitle="Tambahkan kontak dari file .vcf" onClick={() => handleImportClick("vcf")} />
+                <MenuRow icon={Upload} iconBg="hsl(207, 70%, 55%)" title="Impor dari JSON" subtitle="Tambahkan kontak dari file JSON" onClick={() => handleImportClick("json")} />
+                <MenuRow icon={Download} iconBg="hsl(207, 70%, 55%)" title="Impor dari vCard" subtitle="Tambahkan kontak dari file .vcf" onClick={() => handleImportClick("vcf")} />
               </div>
             </div>
           </div>
@@ -306,7 +306,7 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
                 onClick={handleBackupNow}
                 disabled={loading === "backup"}
                 className="w-full h-12 rounded-xl text-base font-semibold"
-                style={{ backgroundColor: "hsl(174, 60%, 51%)" }}
+                style={{ backgroundColor: "hsl(207, 70%, 55%)" }}
               >
                 {loading === "backup" ? (
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -335,7 +335,7 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
                         onClick={() => handleDownloadBackup(b.name)}
                         className="flex items-center gap-3 flex-1 min-w-0 text-left"
                       >
-                        <Download className="h-5 w-5 shrink-0" style={{ color: "hsl(174, 60%, 51%)" }} />
+                        <Download className="h-5 w-5 shrink-0" style={{ color: "hsl(207, 70%, 55%)" }} />
                         <div className="min-w-0">
                           <p className="text-sm font-medium text-foreground break-all">
                             {b.name}
