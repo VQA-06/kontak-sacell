@@ -10,6 +10,7 @@ interface Contact {
   id: string;
   name: string;
   phone: string | null;
+  ewallet: string[];
 }
 
 const Index = () => {
@@ -25,13 +26,18 @@ const Index = () => {
   const fetchContacts = async () => {
     const { data, error } = await supabase
       .from("contacts")
-      .select("id, name, phone")
+      .select("id, name, phone, ewallet")
       .order("name");
     if (error) {
       toast.error("Gagal memuat kontak");
       return;
     }
-    setContacts(data || []);
+    setContacts(
+      (data || []).map((c) => ({
+        ...c,
+        ewallet: (c.ewallet as string[]) || [],
+      }))
+    );
   };
 
   const handleSave = async (data: Omit<Contact, "id">) => {
@@ -95,7 +101,7 @@ const Index = () => {
             <p className="text-sm text-muted-foreground mt-1">{search ? "Coba kata kunci lain" : "Tap + untuk menambahkan kontak baru"}</p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {filtered.map((contact) => (
               <ContactCard key={contact.id} contact={contact} onEdit={handleEdit} onDelete={handleDelete} />
             ))}
@@ -105,7 +111,8 @@ const Index = () => {
 
       <button
         onClick={handleAdd}
-        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
+        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 text-white"
+        style={{ backgroundColor: "hsl(174, 60%, 51%)" }}
         aria-label="Tambah kontak"
       >
         <Plus className="h-6 w-6" />

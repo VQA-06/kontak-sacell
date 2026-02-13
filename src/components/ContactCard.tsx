@@ -1,4 +1,4 @@
-import { MoreVertical, Phone, Copy, Check } from "lucide-react";
+import { MoreVertical, Check } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -8,10 +8,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
+const EWALLET_META: Record<string, { label: string; color: string }> = {
+  dana: { label: "DANA", color: "#108ee9" },
+  gopay: { label: "GoPay", color: "#00aa13" },
+  ovo: { label: "OVO", color: "#4c3494" },
+  shopeepay: { label: "ShopeePay", color: "#ee4d2d" },
+};
+
 interface Contact {
   id: string;
   name: string;
   phone: string | null;
+  ewallet: string[];
 }
 
 interface ContactCardProps {
@@ -34,38 +42,69 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
     if (!contact.phone) return;
     navigator.clipboard.writeText(contact.phone);
     setCopied(true);
-    toast.success("Kontak disalin!");
+    toast.success("Nomor disalin!");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const formatPhone = (phone: string) => {
+    // Format: 0821 3613 8339
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length <= 4) return digits;
+    if (digits.length <= 8) return `${digits.slice(0, 4)} ${digits.slice(4)}`;
+    return `${digits.slice(0, 4)} ${digits.slice(4, 8)} ${digits.slice(8)}`;
   };
 
   return (
     <div
       onDoubleClick={handleDoubleClick}
-      className="group flex items-center gap-3 rounded-xl bg-card p-3 sm:p-4 cursor-pointer select-none transition-all duration-200 hover:shadow-md hover:bg-accent/30 active:scale-[0.98] border border-border/50"
+      className="group flex items-center gap-3 rounded-2xl bg-card p-4 cursor-pointer select-none transition-all duration-200 hover:shadow-md border border-border/40"
     >
-      <div className="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm sm:text-base">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground font-bold text-base">
         {initials}
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-base sm:text-lg text-foreground truncate tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{contact.name}</h3>
+        <h3
+          className="font-bold text-base text-foreground truncate"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
+          {contact.name}
+        </h3>
         {contact.phone && (
-          <span className="block text-sm sm:text-base text-foreground/70 font-medium mt-0.5 tracking-wide">
-            {contact.phone}
+          <span className="block text-sm text-muted-foreground font-medium mt-0.5 tracking-wide">
+            {formatPhone(contact.phone)}
           </span>
+        )}
+        {contact.ewallet && contact.ewallet.length > 0 && (
+          <div className="flex gap-1.5 mt-1.5">
+            {contact.ewallet.map((ew) => {
+              const meta = EWALLET_META[ew];
+              if (!meta) return null;
+              return (
+                <span
+                  key={ew}
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold text-white"
+                  style={{ backgroundColor: meta.color }}
+                  title={meta.label}
+                >
+                  {meta.label[0]}
+                </span>
+              );
+            })}
+          </div>
         )}
       </div>
 
       {copied && (
-        <div className="flex items-center gap-1 text-xs text-success font-medium">
+        <div className="flex items-center gap-1 text-xs text-green-600 font-medium">
           <Check className="h-3.5 w-3.5" />
         </div>
       )}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
-            <MoreVertical className="h-4 w-4 text-muted-foreground" />
+          <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
+            <MoreVertical className="h-5 w-5 text-muted-foreground" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
