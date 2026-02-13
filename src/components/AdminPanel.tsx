@@ -5,6 +5,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerClose,
+} from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -16,6 +23,7 @@ import {
   Loader2,
   Trash2,
   HardDrive,
+  X,
 } from "lucide-react";
 
 interface Contact {
@@ -246,18 +254,52 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
   );
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) setBackupOpen(false); }}>
-      <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
-        {backupOpen ? (
-          <>
-            <DialogHeader>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setBackupOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                  ← Kembali
-                </button>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Menu Admin</DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              Kelola kontak dengan fitur ekspor dan impor
+            </p>
+          </DialogHeader>
+
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ekspor</p>
+              <div className="space-y-2">
+                <MenuRow icon={FileJson} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke JSON" subtitle={`Simpan ${contacts.length} kontak ke file JSON`} onClick={exportJSON} />
+                <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke vCard" subtitle={`Simpan ${contacts.length} kontak ke file .vcf`} onClick={exportVCard} />
               </div>
-              <DialogTitle className="text-xl font-bold">Backup Manager</DialogTitle>
-            </DialogHeader>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Backup</p>
+              <MenuRow icon={HardDrive} iconBg="#64748b" title="Auto-Backup" onClick={() => setBackupOpen(true)} />
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Impor</p>
+              <div className="space-y-2">
+                <MenuRow icon={Upload} iconBg="hsl(174, 60%, 51%)" title="Impor dari JSON" subtitle="Tambahkan kontak dari file JSON" onClick={() => handleImportClick("json")} />
+                <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Impor dari vCard" subtitle="Tambahkan kontak dari file .vcf" onClick={() => handleImportClick("vcf")} />
+              </div>
+            </div>
+          </div>
+
+          <input ref={fileInputRef} type="file" accept=".json,.vcf" onChange={handleFileChange} className="hidden" />
+        </DialogContent>
+      </Dialog>
+
+      <Drawer open={backupOpen} onOpenChange={setBackupOpen}>
+        <DrawerContent className="max-h-[85vh]">
+          <div className="mx-auto w-full max-w-md px-4 pb-6">
+            <DrawerHeader className="relative px-0">
+              <DrawerTitle className="text-xl font-bold">Backup Manager</DrawerTitle>
+              <DrawerClose className="absolute right-0 top-0 rounded-sm opacity-70 hover:opacity-100 transition-opacity">
+                <X className="h-5 w-5" />
+              </DrawerClose>
+            </DrawerHeader>
 
             <div className="space-y-4">
               <Button
@@ -283,19 +325,19 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
                   Belum ada backup
                 </p>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2 overflow-y-auto max-h-[50vh]">
                   {backups.map((b) => (
                     <div
                       key={b.name}
-                      className="flex items-center gap-2 rounded-xl border border-border/50 p-3"
+                      className="flex items-center gap-3 rounded-xl border border-border/50 p-3"
                     >
                       <button
                         onClick={() => handleDownloadBackup(b.name)}
-                        className="flex items-center gap-2 flex-1 min-w-0 text-left"
+                        className="flex items-center gap-3 flex-1 min-w-0 text-left"
                       >
-                        <Download className="h-4 w-4 shrink-0" style={{ color: "hsl(174, 60%, 51%)" }} />
+                        <Download className="h-5 w-5 shrink-0" style={{ color: "hsl(174, 60%, 51%)" }} />
                         <div className="min-w-0">
-                          <p className="text-xs font-medium text-foreground break-all">
+                          <p className="text-sm font-medium text-foreground break-all">
                             {b.name}
                           </p>
                           <p className="text-xs text-muted-foreground">
@@ -307,51 +349,17 @@ const AdminPanel = ({ open, onOpenChange, contacts, onRefresh }: AdminPanelProps
                         onClick={() => handleDeleteBackup(b.name)}
                         className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors shrink-0"
                       >
-                        <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        <Trash2 className="h-5 w-5 text-muted-foreground" />
                       </button>
                     </div>
                   ))}
                 </div>
               )}
             </div>
-          </>
-        ) : (
-          <>
-            <DialogHeader>
-              <DialogTitle className="text-xl font-bold">Menu Admin</DialogTitle>
-              <p className="text-sm text-muted-foreground">
-                Kelola kontak dengan fitur ekspor dan impor
-              </p>
-            </DialogHeader>
-
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ekspor</p>
-                <div className="space-y-2">
-                  <MenuRow icon={FileJson} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke JSON" subtitle={`Simpan ${contacts.length} kontak ke file JSON`} onClick={exportJSON} />
-                  <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Ekspor ke vCard" subtitle={`Simpan ${contacts.length} kontak ke file .vcf`} onClick={exportVCard} />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Backup</p>
-                <MenuRow icon={HardDrive} iconBg="#64748b" title="Auto-Backup" onClick={() => setBackupOpen(true)} />
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Impor</p>
-                <div className="space-y-2">
-                  <MenuRow icon={Upload} iconBg="hsl(174, 60%, 51%)" title="Impor dari JSON" subtitle="Tambahkan kontak dari file JSON" onClick={() => handleImportClick("json")} />
-                  <MenuRow icon={Download} iconBg="hsl(174, 60%, 51%)" title="Impor dari vCard" subtitle="Tambahkan kontak dari file .vcf" onClick={() => handleImportClick("vcf")} />
-                </div>
-              </div>
-            </div>
-
-            <input ref={fileInputRef} type="file" accept=".json,.vcf" onChange={handleFileChange} className="hidden" />
-          </>
-        )}
-      </DialogContent>
-    </Dialog>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 
