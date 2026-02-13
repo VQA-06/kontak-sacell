@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
 
     const now = new Date();
     const timestamp = now.toISOString().replace(/[:.]/g, "-");
-    const fileName = `backup-${timestamp}.json`;
+    const fileName = `backup-${timestamp}-${contacts.length}kontak.json`;
 
     // Upload to storage
     const { error: uploadError } = await supabase.storage
