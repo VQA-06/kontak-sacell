@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import danaLogo from "@/assets/ewallet-dana.png";
+import danaLogo from "@/assets/ewallet-dana.webp";
 
 const EWALLET_META: Record<string, { label: string; color: string; logo?: string }> = {
   dana: { label: "DANA", color: "#108ee9", logo: danaLogo },
