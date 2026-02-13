@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Session } from "@supabase/supabase-js";
-import Auth from "./Auth";
 import ContactCard from "@/components/ContactCard";
 import ContactFormDialog from "@/components/ContactFormDialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Plus, Search, LogOut, BookUser, Users } from "lucide-react";
+import { Plus, Search, BookUser, Users } from "lucide-react";
 
 interface Contact {
   id: string;
@@ -19,27 +16,14 @@ interface Contact {
 }
 
 const Index = () => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editContact, setEditContact] = useState<Contact | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
+    fetchContacts();
   }, []);
-
-  useEffect(() => {
-    if (session) fetchContacts();
-  }, [session]);
 
   const fetchContacts = async () => {
     const { data, error } = await supabase
@@ -55,16 +39,11 @@ const Index = () => {
 
   const handleSave = async (data: Omit<Contact, "id">) => {
     if (editContact) {
-      const { error } = await supabase
-        .from("contacts")
-        .update(data)
-        .eq("id", editContact.id);
+      const { error } = await supabase.from("contacts").update(data).eq("id", editContact.id);
       if (error) { toast.error("Gagal mengupdate kontak"); return; }
       toast.success("Kontak diperbarui!");
     } else {
-      const { error } = await supabase
-        .from("contacts")
-        .insert({ ...data, user_id: session!.user.id });
+      const { error } = await supabase.from("contacts").insert(data);
       if (error) { toast.error("Gagal menambah kontak"); return; }
       toast.success("Kontak ditambahkan!");
     }
@@ -89,22 +68,6 @@ const Index = () => {
     setDialogOpen(true);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setContacts([]);
-    toast.success("Berhasil keluar!");
-  };
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
-    );
-  }
-
-  if (!session) return <Auth />;
-
   const filtered = contacts.filter((c) =>
     [c.name, c.phone, c.email, c.company]
       .filter(Boolean)
@@ -115,75 +78,47 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-lg border-b border-border">
-        <div className="mx-auto max-w-2xl px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
-              <BookUser className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <h1 className="text-lg font-bold text-foreground hidden sm:block">Kontak Saya</h1>
+        <div className="mx-auto max-w-2xl px-4 py-3 flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
+            <BookUser className="h-5 w-5 text-primary-foreground" />
           </div>
-          <Button variant="ghost" size="icon" onClick={handleLogout} title="Keluar">
-            <LogOut className="h-5 w-5" />
-          </Button>
+          <h1 className="text-lg font-bold text-foreground">Kontak Saya</h1>
         </div>
       </header>
 
-      {/* Content */}
       <main className="mx-auto max-w-2xl px-4 py-4 pb-24">
-        {/* Search */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Cari kontak..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 bg-card"
-          />
+          <Input placeholder="Cari kontak..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 bg-card" />
         </div>
 
-        {/* Contact count */}
         <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
           <Users className="h-4 w-4" />
           <span>{filtered.length} kontak</span>
         </div>
 
-        {/* Contact list */}
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-4">
               <BookUser className="h-8 w-8 text-muted-foreground" />
             </div>
-            <p className="text-muted-foreground font-medium">
-              {search ? "Kontak tidak ditemukan" : "Belum ada kontak"}
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {search ? "Coba kata kunci lain" : "Tap + untuk menambahkan kontak baru"}
-            </p>
+            <p className="text-muted-foreground font-medium">{search ? "Kontak tidak ditemukan" : "Belum ada kontak"}</p>
+            <p className="text-sm text-muted-foreground mt-1">{search ? "Coba kata kunci lain" : "Tap + untuk menambahkan kontak baru"}</p>
           </div>
         ) : (
           <div className="space-y-2">
             {filtered.map((contact) => (
-              <ContactCard
-                key={contact.id}
-                contact={contact}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
+              <ContactCard key={contact.id} contact={contact} onEdit={handleEdit} onDelete={handleDelete} />
             ))}
           </div>
         )}
 
-        {/* Hint */}
         {filtered.length > 0 && (
-          <p className="text-xs text-muted-foreground text-center mt-6">
-            💡 Klik dua kali pada kontak untuk menyalin
-          </p>
+          <p className="text-xs text-muted-foreground text-center mt-6">💡 Klik dua kali pada kontak untuk menyalin</p>
         )}
       </main>
 
-      {/* FAB */}
       <button
         onClick={handleAdd}
         className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
@@ -192,13 +127,7 @@ const Index = () => {
         <Plus className="h-6 w-6" />
       </button>
 
-      {/* Dialog */}
-      <ContactFormDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        contact={editContact}
-        onSave={handleSave}
-      />
+      <ContactFormDialog open={dialogOpen} onOpenChange={setDialogOpen} contact={editContact} onSave={handleSave} />
     </div>
   );
 };
