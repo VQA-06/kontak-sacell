@@ -48,9 +48,9 @@ const ContactCard = ({ contact, onEdit, onDelete }: ContactCardProps) => {
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">{contact.name}</h3>
+        <h3 className="font-bold text-base sm:text-lg text-foreground truncate tracking-tight">{contact.name}</h3>
         {contact.phone && (
-          <span className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+          <span className="block text-sm sm:text-base text-muted-foreground font-medium mt-0.5 tracking-wide">
             {contact.phone}
           </span>
         )}
