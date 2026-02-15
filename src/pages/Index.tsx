@@ -143,24 +143,24 @@ const Index = () => {
         ) : null}
       </main>
 
-      <button
-        onClick={handleAdd}
-        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 text-white"
-        style={{ backgroundColor: "hsl(207, 70%, 55%)" }}
-        aria-label="Tambah kontak"
-      >
-        <Plus className="h-6 w-6" />
-      </button>
-
-      {showScrollTop && (
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-center gap-3">
+        {showScrollTop && (
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-card border border-border shadow-md transition-all duration-300 hover:scale-105 active:scale-95 text-muted-foreground hover:text-foreground animate-in fade-in slide-in-from-bottom-2"
+            aria-label="Scroll ke atas"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </button>
+        )}
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-[5.5rem] right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-card border border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 text-muted-foreground hover:text-foreground animate-in fade-in slide-in-from-bottom-4"
-          aria-label="Scroll ke atas"
+          onClick={handleAdd}
+          className="flex h-14 w-14 items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 text-primary-foreground bg-primary"
+          aria-label="Tambah kontak"
         >
-          <ChevronUp className="h-5 w-5" />
+          <Plus className="h-6 w-6" />
         </button>
-      )}
+      </div>
 
       <ContactFormDialog open={dialogOpen} onOpenChange={setDialogOpen} contact={editContact} onSave={handleSave} />
       <AdminPanel open={adminOpen} onOpenChange={setAdminOpen} contacts={contacts} onRefresh={fetchContacts} />
