@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import ContactCard from "@/components/ContactCard";
 import ContactFormDialog from "@/components/ContactFormDialog";
 import AdminPanel from "@/components/AdminPanel";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Plus, Search, BookUser, Users, SlidersHorizontal, X } from "lucide-react";
+import { Plus, Search, BookUser, Users, SlidersHorizontal, X, ChevronUp } from "lucide-react";
 
 interface Contact {
   id: string;
@@ -20,8 +20,15 @@ const Index = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editContact, setEditContact] = useState<Contact | null>(null);
   const [adminOpen, setAdminOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const showAdminButton = search.toLowerCase() === "edit";
+
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 300);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     fetchContacts();
@@ -144,6 +151,16 @@ const Index = () => {
       >
         <Plus className="h-6 w-6" />
       </button>
+
+      {showScrollTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-card border border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 text-muted-foreground hover:text-foreground animate-in fade-in slide-in-from-bottom-4"
+          aria-label="Scroll ke atas"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </button>
+      )}
 
       <ContactFormDialog open={dialogOpen} onOpenChange={setDialogOpen} contact={editContact} onSave={handleSave} />
       <AdminPanel open={adminOpen} onOpenChange={setAdminOpen} contacts={contacts} onRefresh={fetchContacts} />
