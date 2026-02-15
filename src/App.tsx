@@ -10,7 +10,11 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <div
-    onContextMenu={(e) => e.preventDefault()}
+    onContextMenu={(e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
+      e.preventDefault();
+    }}
     style={{ WebkitTouchCallout: "none", WebkitUserSelect: "none" }}
   >
     <QueryClientProvider client={queryClient}>
