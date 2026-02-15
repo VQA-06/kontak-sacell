@@ -147,10 +147,10 @@ const Index = () => {
         {showScrollTop && (
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-card border border-border shadow-md transition-all duration-300 hover:scale-105 active:scale-95 text-muted-foreground hover:text-foreground animate-in fade-in slide-in-from-bottom-2"
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-card border border-border shadow-md transition-all duration-300 hover:scale-105 active:scale-95 text-muted-foreground hover:text-foreground animate-in fade-in slide-in-from-bottom-2"
             aria-label="Scroll ke atas"
           >
-            <ChevronUp className="h-4 w-4" />
+            <ChevronUp className="h-5 w-5" />
           </button>
         )}
         <button
