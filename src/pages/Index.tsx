@@ -155,7 +155,7 @@ const Index = () => {
       {showScrollTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-card border border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 text-muted-foreground hover:text-foreground animate-in fade-in slide-in-from-bottom-4"
+          className="fixed bottom-[5.5rem] right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-card border border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 text-muted-foreground hover:text-foreground animate-in fade-in slide-in-from-bottom-4"
           aria-label="Scroll ke atas"
         >
           <ChevronUp className="h-5 w-5" />
