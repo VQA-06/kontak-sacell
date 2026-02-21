@@ -34,9 +34,10 @@ interface ContactFormDialogProps {
   onOpenChange: (open: boolean) => void;
   contact?: Contact | null;
   onSave: (data: Omit<Contact, "id">) => Promise<void>;
+  prefillPhone?: string;
 }
 
-const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormDialogProps) => {
+const ContactFormDialog = ({ open, onOpenChange, contact, onSave, prefillPhone }: ContactFormDialogProps) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [ewallet, setEwallet] = useState<string[]>([]);
@@ -50,11 +51,11 @@ const ContactFormDialog = ({ open, onOpenChange, contact, onSave }: ContactFormD
       setEwallet(contact.ewallet || []);
     } else {
       setName("");
-      setPhone("");
+      setPhone(prefillPhone || "");
       setEwallet([]);
     }
     setDuplicateName(null);
-  }, [contact, open]);
+  }, [contact, open, prefillPhone]);
 
   const cleanPhone = (value: string) => value.replace(/[\s\-\.\(\)\+]/g, "");
 
