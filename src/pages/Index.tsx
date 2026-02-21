@@ -21,6 +21,7 @@ const Index = () => {
   const [editContact, setEditContact] = useState<Contact | null>(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [prefillPhone, setPrefillPhone] = useState("");
 
   const showAdminButton = search.toLowerCase() === "edit";
 
@@ -77,8 +78,9 @@ const Index = () => {
     setDialogOpen(true);
   };
 
-  const handleAdd = () => {
+  const handleAdd = (prefillPhone?: string) => {
     setEditContact(null);
+    setPrefillPhone(prefillPhone || "");
     setDialogOpen(true);
   };
 
@@ -133,6 +135,15 @@ const Index = () => {
             </div>
             <p className="text-muted-foreground font-medium">{search ? "Kontak tidak ditemukan" : "Belum ada kontak"}</p>
             <p className="text-sm text-muted-foreground mt-1">{search ? "Coba kata kunci lain" : "Tap + untuk menambahkan kontak baru"}</p>
+            {search && /\d/.test(search) && (
+              <button
+                onClick={() => handleAdd(search)}
+                className="mt-4 flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-medium shadow-md hover:opacity-90 active:scale-95 transition-all"
+              >
+                <Plus className="h-4 w-4" />
+                Tambahkan "{search}" ke kontak
+              </button>
+            )}
           </div>
         ) : !showAdminButton ? (
           <div className="space-y-3">
@@ -154,7 +165,7 @@ const Index = () => {
           </button>
         )}
         <button
-          onClick={handleAdd}
+          onClick={() => handleAdd()}
           className="flex h-14 w-14 items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 text-primary-foreground bg-primary"
           aria-label="Tambah kontak"
         >
@@ -162,7 +173,7 @@ const Index = () => {
         </button>
       </div>
 
-      <ContactFormDialog open={dialogOpen} onOpenChange={setDialogOpen} contact={editContact} onSave={handleSave} />
+      <ContactFormDialog open={dialogOpen} onOpenChange={setDialogOpen} contact={editContact} onSave={handleSave} prefillPhone={prefillPhone} />
       <AdminPanel open={adminOpen} onOpenChange={setAdminOpen} contacts={contacts} onRefresh={fetchContacts} />
     </div>
   );
