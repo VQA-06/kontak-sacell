@@ -38,6 +38,16 @@ Deno.serve(async (req) => {
 
     if (uploadError) throw uploadError;
 
+    // Keep only the 3 most recent backups, delete older ones
+    const { data: allFiles, error: listError } = await supabase.storage
+      .from("backups")
+      .list("", { sortBy: { column: "created_at", order: "desc" } });
+
+    if (!listError && allFiles && allFiles.length > 3) {
+      const filesToDelete = allFiles.slice(3).map((f) => f.name);
+      await supabase.storage.from("backups").remove(filesToDelete);
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
